@@ -1,0 +1,214 @@
+from sklearn.preprocessing import QuantileTransformer, OneHotEncoder
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.multioutput import MultiOutputClassifier
+import numpy as np
+
+X_custom = [
+    ["Nacken"],
+    ["Schulterprobleme"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nacken"],
+    ["Schulterprobleme"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nacken"],
+    ["Schulterprobleme"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nacken"],
+    ["Schulterprobleme"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nacken"],
+    ["Schulterprobleme"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nacken"],
+    ["Schulterschmerzen"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nacken"],
+    ["Schulterschmerzen"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nacken"],
+    ["Schulterschmerzen"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nacken"],
+    ["Schulterschmerzen"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nacken"],
+    ["Schulterschmerzen"],
+    ["Rückenprobleme"],
+    ["Knieschmerzen"],
+    ["Nackenprobleme"],
+    ["Schulterschmerzen"],
+    ["Rückenschmerzen"],
+    ["Knieprobleme"],
+    ["Nackenbeschwerden"],
+    ["Schulterverletzungen"],
+    ["Rückenleiden"],
+    ["Knieschäden"],
+    ["Nackenproblematik"],
+    ["Schulterschaden"],
+    ["Rückenbeschwerden"],
+    ["Knieschädigung"],
+    ["Nackenverletzung"],
+    ["Schultererkrankungen"],
+    ["Rückenverletzung"],
+    ["Knieverletzung"],
+    ["Nackenversteifung"],
+    ["Schulterschmerzen"],
+    ["Rückenverformung"],
+    ["Knieverstauchung"],
+    ["Nackenzerrung"],
+    ["Schulterluxation"],
+    ["Rückenschaden"],
+    ["Kniesehnenriss"],
+    ["Nackenentzündung"],
+    ["Schulterentzündung"],
+    ["Rückenverrenkung"],
+    ["Kniesehnenentzündung"],
+    ["Nackenirritation"],
+    ["Schulterschädigung"],
+    ["Rückenneigung"],
+    ["Kniesehnenverletzung"],
+    ["Nackensteifheit"],
+    ["Schulterüberlastung"],
+    ["Rückenüberbeanspruchung"],
+    ["Kniesehnenschmerzen"],
+    ["Nackenverspannung"],
+    ["Schulterentzündung"],
+    ["Rückenermüdung"],
+    ["Knieüberanstrengung"]
+]
+
+y_custom = [
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14],
+    [0, 1, 2, 3],
+    [0, 8, 9, 10],
+    [4, 5, 6, 7],
+    [11, 12, 13, 14]
+]
+
+categorical_features = [0]
+categorical_transformer = Pipeline(steps=[
+    ('onehot', OneHotEncoder(handle_unknown='ignore'))
+])
+
+numeric_features = []
+numeric_transformer = Pipeline(steps=[
+    ('scaler', QuantileTransformer())
+])
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', categorical_transformer, categorical_features),
+        ('num', numeric_transformer, numeric_features)
+    ])
+
+# Define classifier
+classifier = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', MultiOutputClassifier(KNeighborsClassifier(n_neighbors=4)))
+])
+
+# Train the model
+classifier.fit(X_custom, y_custom)
+
+
+# Make predictions
+def predict_exercise(pain_type):
+    prediction = classifier.predict([[pain_type]])
+    return prediction[0]
+
+
+# Interaction with the model
+pain_type = input("Pain type: ")
+
+predicted_exercise = predict_exercise(pain_type)
+print("Predicted exercise:", predicted_exercise)
+
+# Calculate accuracy
+accuracy = np.mean(classifier.predict(X_custom) == y_custom)
+print("Model accuracy:", accuracy)
